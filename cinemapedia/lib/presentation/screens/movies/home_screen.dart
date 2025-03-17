@@ -1,3 +1,4 @@
+import 'package:cinemapedia/config/constants/enviroment.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen
@@ -10,8 +11,9 @@ class HomeScreen
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Placeholder(
+      body: Center(
 
+        child: Text(Enviroment.moviedb),
       ),
     );
   }

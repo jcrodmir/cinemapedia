@@ -8,7 +8,7 @@ class MovieMapper {
   static Movie movieDBToentity(MovieMovieDB moviedb) => Movie(
     adult: moviedb.adult,
     backdropPath: moviedb.backdropPath != "" 
-    ? "https://image.tmdb.org/t/p/w500/${moviedb.backdropPath}"
+    ? "https://image.tmdb.org/t/p/w400/${moviedb.backdropPath}"
     :"https://www.redbubble.com/es/i/poster/404-No-encontrado-de-BrainChaos/147174010.LVTDI",
     genreIds: moviedb.genreIds.map((e)=> e.toString()).toList(),
     id: moviedb.id,

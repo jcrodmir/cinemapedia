@@ -9,7 +9,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _HomeView());
+    return Scaffold(
+      body: _HomeView(),
+      bottomNavigationBar: CustomBottomNavigation(),
+    );
   }
 }
 
@@ -25,32 +28,86 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   void initState() {
     super.initState();
     ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+    ref.read(popularProvider.notifier).loadNextPage();
+    ref.read(upcomingProvider.notifier).loadNextPage();
+    ref.read(topRatedProvider.notifier).loadNextPage();
   }
 
   @override
   Widget build(BuildContext context) {
-    final nowPlayinhMovies = ref.watch(nowPlayingMoviesProvider);
 
-    if (nowPlayinhMovies.isEmpty) return CircularProgressIndicator();
+    final initialLoading= ref.watch(initialLoadingProvider);
 
-    return Column(
+    if(initialLoading) return FullScreenLoader();
 
+
+    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
+    final popularMovies = ref.watch(popularProvider);
+    final upcomingMovies = ref.watch(upcomingProvider);
+    final topRatedMovies = ref.watch(topRatedProvider);
+    //final moviesSlides = ref.watch(moviesSlideshowProvider);
+
+    
+
+    if (nowPlayingMovies.isEmpty) return CircularProgressIndicator();
+
+    return Visibility(
+      visible: !initialLoading,
+      child: CustomScrollView(
+        slivers: [
       
-
-      children: [
-        CustomAppbar(
-          
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: nowPlayinhMovies.length,
-            itemBuilder: (context, index) {
-              final movie = nowPlayinhMovies[index];
-              return ListTile(title: Text(movie.title));
-            },
+          const SliverAppBar(
+            floating: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: CustomAppbar(),
+            ),
           ),
-        ),
-      ],
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              return Column(
+                children: [
+                  CustomAppbar(),
+                  MoviesSlideshow(movies: nowPlayingMovies),
+                  MovieHorizontalListview(
+                    movies: nowPlayingMovies,
+                    title: "En cines",
+                    subTitle: "Lunes 20",
+                    loadNextPage: () {
+                      ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+      
+                  MovieHorizontalListview(
+                    movies: upcomingMovies,
+                    title: "Proximamente",
+                    subTitle: "Este mes",
+                    loadNextPage: () {
+                      ref.read(upcomingProvider.notifier).loadNextPage();
+                    },
+                  ),
+                  MovieHorizontalListview(
+                    movies: popularMovies,
+                    title: "Populares",
+                    loadNextPage: () {
+                      ref.read(popularProvider.notifier).loadNextPage();
+                    },
+                  ),
+                  MovieHorizontalListview(
+                    movies: topRatedMovies,
+                    title: "Mejor Calificadas",
+                    subTitle: "De todos los tiempos",
+                    loadNextPage: () {
+                      ref.read(topRatedProvider.notifier).loadNextPage();
+                    },
+                  ),
+      
+                  const SizedBox(height: 50),
+                ],
+              );
+            }, childCount: 1),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -26,7 +26,7 @@ class MoviedbDatasource extends MovieDataSource{
     final List<Movie> movies=movieDbResponse.results
     .where((moviedb) => moviedb.posterPath !="no-poster",)
     .map(
-      (moviedb)=> MovieMapper.movieDBToentity(moviedb)).toList();
+      (moviedb)=> MovieMapper.movieDBToEntity(moviedb)).toList();
       return movies;
   }
   @override
@@ -68,8 +68,17 @@ class MoviedbDatasource extends MovieDataSource{
     if(response.statusCode !=200) throw Exception("Movie with id: $id not found");
 
     final movieDetails= MovieDetails.fromJson(response.data);
-    final Movie movie=  MovieMapper.MovieDetailsToEntity(movieDetails);
+    final Movie movie=  MovieMapper.movieDetailsToEntity(movieDetails);
     return movie;
+  }
+  
+  @override
+  Future<List<Movie>> searchMovie(String query) async{
+    final response= await dio.get("/search/movie",queryParameters: {
+      "query":query
+    } );
+    return  _jsonToMovie(response.data);
+
   }
 
 }

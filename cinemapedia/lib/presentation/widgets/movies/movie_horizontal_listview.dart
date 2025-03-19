@@ -23,7 +23,6 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     scrollController.addListener((){
         if(widget.loadNextPage == null) return;
@@ -36,7 +35,6 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     
     scrollController.dispose();
     super.dispose();
@@ -144,7 +142,7 @@ class _Title extends StatelessWidget {
   final String? title;
   final String? subTitle;
   
-  const _Title({super.key, this.title, this.subTitle});
+  const _Title({this.title, this.subTitle});
 
   @override
   Widget build(BuildContext context) {

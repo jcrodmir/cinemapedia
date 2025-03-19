@@ -2,10 +2,7 @@ import 'package:cinemapedia/presentation/providers/actors/actors_by_movie_provid
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animate_do/animate_do.dart';
-
 import 'package:cinemapedia/domain/entities/movie.dart';
-
-import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:cinemapedia/presentation/providers/movies/movie_info_provider.dart';
 
 

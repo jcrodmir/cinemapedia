@@ -1,4 +1,5 @@
 import 'package:cinemapedia/presentation/providers/actors/actors_by_movie_provider.dart';
+import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animate_do/animate_do.dart';
@@ -203,7 +204,7 @@ class _ActorsByMovie extends ConsumerWidget {
 
 
 
-class _CustomSliverAppBar extends StatelessWidget {
+class _CustomSliverAppBar extends ConsumerWidget {
 
   final Movie movie;
 
@@ -212,7 +213,7 @@ class _CustomSliverAppBar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
 
     final size = MediaQuery.of(context).size;
 
@@ -220,6 +221,15 @@ class _CustomSliverAppBar extends StatelessWidget {
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
+      actions: [
+        IconButton(onPressed: (){
+            ref.watch(localStorageRepositoryProvider).toggleFavorite(movie);
+
+        }, icon: Icon(Icons.favorite_border)
+           //icon: Icon(Icons.favorite_border_rounded,color: Colors.red,)
+        )
+
+      ],
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         // title: Text( 
@@ -241,21 +251,11 @@ class _CustomSliverAppBar extends StatelessWidget {
               ),
             ),
 
-            const SizedBox.expand(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.7, 1.0],
-                    colors: [
+            //uso de la clase personalizada
+            _CustomGradient(begin: Alignment.topRight ,end: Alignment.bottomLeft,stops:[0.0, 0.2],colors:[
+                      Colors.black54,
                       Colors.transparent,
-                      Colors.black87
-                    ]
-                  )
-                )
-              ),
-            ),
+                    ] ),
 
             const SizedBox.expand(
               child: DecoratedBox(
@@ -278,5 +278,30 @@ class _CustomSliverAppBar extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _CustomGradient extends StatelessWidget {
+  final AlignmentGeometry begin;
+  final AlignmentGeometry end;
+  final List<double> stops;
+  final List<Color> colors;
+
+  const _CustomGradient({required this.begin, required this.end, required this.stops, required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return  SizedBox.expand(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: begin,
+                    end:end,
+                    stops: stops,
+                    colors: colors
+                  )
+                )
+              ),
+            );
   }
 }
